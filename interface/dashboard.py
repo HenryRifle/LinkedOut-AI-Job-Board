@@ -9,12 +9,12 @@ from bokeh.models import HoverTool
 hv.extension('bokeh')
 import plotly.express as px
 
-path = 'D:\Big-Data-Project\project_data'
+path = 'project_data'
 filename = path + '/2019-29/occupation.xlsx'
 
-occu_obj = openpyxl.load_workbook(path + '/2019-29/occupation.xlsx')
+occu_obj = openpyxl.load_workbook(path + '\\2019-29\\occupation.xlsx')
 
-occu_obj_23 = openpyxl.load_workbook(path + '/2023-33/occupation.xlsx')
+occu_obj_23 = openpyxl.load_workbook(path + '\\2023-33\\occupation.xlsx')
 
 
 index_sheet = pd.read_excel(filename)
@@ -94,3 +94,4 @@ def dashboard():
 
 
     st.plotly_chart(fig, use_container_width=True)
+dashboard()
