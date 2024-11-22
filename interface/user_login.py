@@ -7,7 +7,7 @@ import user_profile
 
 def load_users():
     """Load users from JSON file."""
-    users_file = Path(__file__).parent / 'data' / 'users.json'
+    users_file = Path(__file__).parent / 'project_data' / 'user_data' / 'users.json'
     users_file.parent.mkdir(exist_ok=True)
 
 

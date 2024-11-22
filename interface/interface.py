@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-import dashboard
+import home
 import job_recommendation
 import user_profile
-import home
+import dashboard
 
 from pathlib import Path
 
@@ -52,6 +52,7 @@ def add_logo():
 # Streamlit app
 def main():    
 
+    st.title("LinkedOut")
 
     tab = st.tabs(["Home","Dashboard", "User Profile", "Job Recommendation"])
 

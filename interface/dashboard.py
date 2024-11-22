@@ -20,7 +20,7 @@ filename = path + '/2019-29/occupation.xlsx'
 index_sheet = pd.read_excel("project_data\\2019-29\\occupation.xlsx")
 # index_sheet_23 = pd.read_excel()
 sheet_data = {}
-sheet_data_23 = {}
+sheet_data_23 = {}  
 
 def basic_data_cleaning(data1):
 
@@ -64,7 +64,7 @@ def dashboard():
     selected_groups = st.multiselect(
         "Select Occupational Groups",
         options=df['Job Title'].unique(),
-        default=df['Job Title'].unique()
+        default=df['Job Title'][0]
     )
 
 
@@ -94,4 +94,3 @@ def dashboard():
 
 
     st.plotly_chart(fig, use_container_width=True)
-dashboard()
