@@ -12,12 +12,12 @@ import plotly.express as px
 path = 'project_data'
 filename = path + '/2019-29/occupation.xlsx'
 
-occu_obj = openpyxl.load_workbook(path + '\\2019-29\\occupation.xlsx')
+# occu_obj = openpyxl.load_workbook(path + '\\2019-29\\occupation.xlsx')
 
-occu_obj_23 = openpyxl.load_workbook(path + '\\2023-33\\occupation.xlsx')
+# occu_obj_23 = openpyxl.load_workbook(path + '\\2023-33\\occupation.xlsx')
 
 
-index_sheet = pd.read_excel(filename)
+index_sheet = pd.read_excel("project_data\\2019-29\\occupation.xlsx")
 # index_sheet_23 = pd.read_excel()
 sheet_data = {}
 sheet_data_23 = {}

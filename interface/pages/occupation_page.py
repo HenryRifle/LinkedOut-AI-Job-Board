@@ -1,31 +1,26 @@
 import pandas as pd
+import numpy as np
 import openpyxl
 import pandas as pd
+import holoviews as hv
+from holoviews import opts
 import streamlit as st
-from pathlib import Path
+from bokeh.models import HoverTool
+hv.extension('bokeh')
 import plotly.express as px
 
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent))
-from user_login import login_user, logout_user
+# path = 'D:\Big-Data-Project\project_data'
+# filename = path + '/2019-29/occupation.xlsx'
 
-# Check login before showing any content
-if not login_user():
-    st.stop()
+occu_obj = openpyxl.load_workbook('project_data\\2019-29\\occupation.xlsx')
 
-if st.sidebar.button("Logout"):
-    logout_user()
-    st.rerun()
+occu_obj_23 = openpyxl.load_workbook('project_data\\2023-33\\occupation.xlsx')
 
-# Define base directory
-BASE_DIR = Path(__file__).parent.parent.parent
 
-filename = BASE_DIR / 'project_data' / '2019-29' / 'occupation.xlsx'
-
-occu_obj = openpyxl.load_workbook(filename)
-index_sheet = pd.read_excel(filename)
+index_sheet = pd.read_excel('project_data\\2019-29\\occupation.xlsx')
+index_sheet_23 = pd.read_excel()
 sheet_data = {}
+sheet_data_23 = {}
 
 def basic_data_cleaning(data1):
 
