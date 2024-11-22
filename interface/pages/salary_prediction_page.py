@@ -46,47 +46,57 @@ class User:
 
 
 
-def main():
-    st.title("Salary Prediction based on skills")
-    st.subheader("Rate yourself on the following skills:")
+def user_profile():
+    # Input fields
+    name = st.session_state.username
 
-    name = st.text_input("Enter your name", placeholder="John Doe")
-    st.write("Rate yourself on the following skills:")
+    st.title(f"Rate yourself on the following skills, {name}")
+
+    skills = [
+        "Education", "Adaptability", "Computers and information technology", "Creativity",
+        "Critical and Analytical Thinking", "Customer Service", "Detail Oriented",
+        "Fine Motor Skills", "Interpersonal Relations", "Leadership", "Mathematics",
+        "Mechanical", "Physical Strength and Stamina", "Problem Solving and Decision Making",
+        "Project Management", "Scientific Skills", "Speaking and Listening",
+        "Writing and Reading"
+    ]
+
+    user_ratings = {}
+
+    # Create sliders with Beginner and Advanced labels below
+    for skill in skills:
+        st.write(f"### {skill}")
+        
+        # Slider
+        user_ratings[skill] = st.slider("", 0.0, 5.0, 2.5, 0.5, key=skill)  # Slider widget
+
+        # Labels below the slider using HTML
+        st.markdown(
+            """
+            <div style="display: flex; justify-content: space-between;">
+                <span>Beginner</span>
+                <span>Advanced</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
-    # Skill sliders
-    education = st.slider("Education", 0.0, 5.0, 2.5,0.5)
-    adaptability = st.slider("Adaptability", 0.0, 5.0, 2.5,0.5)
-    computer_ability = st.slider("Computers and information technology", 0.0, 5.0,2.5, 0.5)
-    creativity = st.slider("Creativity", 0.0, 5.0, 2.5,0.5)
-    critical_thinking = st.slider("Critical and Analytical Thinking", 0.0, 5.0, 2.5,0.5)
-    customer_service = st.slider("Customer Service", 0.0, 5.0, 2.5,0.5)
-    detail_oriented = st.slider("Detail Oriented", 0.0, 5.0, 2.5,0.5)
-    fine_motor = st.slider("Fine Motor Skills", 0.0, 5.0, 2.5,0.5)
-    interpersonal = st.slider("Interpersonal Relations", 0.0, 5.0, 2.5,0.5)
-    leadership = st.slider("Leadership", 0.0, 5.0, 2.5,0.5)
-    mathematics = st.slider("Mathematics", 0.0, 5.0, 2.5,0.5)
-    mechanical = st.slider("Mechanical", 0.0, 5.0, 2.5,0.5)
-    physical_strength = st.slider("Physical Strength and Stamina", 0.0, 5.0, 2.5,0.5)
-    problem_solving = st.slider("Problem Solving and Decision Making", 0.0, 5.0, 2.5,0.5)
-    project_management = st.slider("Project Management", 0.0, 5.0, 2.5,0.5)
-    science = st.slider("Scientific Skills", 0.0, 5.0, 2.5,0.5)
-    speaking = st.slider("Speaking and Listening", 0.0, 5.0, 2.5,0.5)
-    writing = st.slider("Writing and Reading", 0.0, 5.0, 2.5,0.5)
+
+    users_df = pd.read_excel("project_data\\generated_data\\users.xlsx")
+
+    if st.button("Submit"):
+        
+        for key, value in user_ratings.items():
+            users_df.loc[users_df['Name'] == name, key] = value
+        st.success("Updated your information successfully!")
+        
+        
+        users_df.to_excel('project_data\\generated_data\\users.xlsx', index=False)
 
 
 
-    if st.button("Predict Salary"):
-
-        if name.strip():
-            new_user = User(name= name, skills_vector= [education, adaptability,computer_ability,creativity,critical_thinking,customer_service,detail_oriented,fine_motor,interpersonal,leadership,mathematics,mechanical,physical_strength,problem_solving,project_management,science,speaking,writing])
-
-        # Predict salary
-        predicted_salary = predict_salary(new_user.skills_vector)
-
-        st.write(f"Based on your skills, your predicted salary is:\n\n ${predicted_salary:,.2f}")
-
-# Run the app
-if __name__ == "__main__":
-    main()
+if 'username' not in st.session_state:
+    st.session_state.username = "Test User" 
+user_profile()
 
