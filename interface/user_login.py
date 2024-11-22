@@ -51,7 +51,7 @@ def login_user():
 
                 if submit:
                     users = load_users()
-                    users_df = pd.read_excel("D:\\Big-Data-Project\\generated_data\\users.xlsx")
+                    users_df = pd.read_excel("project_data\\generated_data\\users.xlsx")
                     if username in users and password == users[username]:
                         st.session_state.logged_in = True
                         st.session_state.user = users_df[users_df['Name'] == username]
@@ -71,7 +71,7 @@ def login_user():
 
                 if signup_submit:
                     users = load_users()
-                    users_df = pd.read_excel("D:\\Big-Data-Project\\generated_data\\users.xlsx")
+                    users_df = pd.read_excel("project_data\\generated_data\\users.xlsx")
 
                     if not new_username or not new_password:
                         st.error("Please fill in all fields!")
@@ -85,7 +85,7 @@ def login_user():
                         st.session_state.username = new_username
                         new_user_data = {"Name": new_username}
                         users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=True)
-                        users_df.to_excel("D:\\Big-Data-Project\\generated_data\\users.xlsx", index=False)
+                        users_df.to_excel("project_data\\generated_data\\users.xlsx", index=False)
                         st.success("Account created successfully! Please go to the Login tab to sign in.")
 
     return st.session_state.logged_in
