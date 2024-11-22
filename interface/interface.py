@@ -2,7 +2,24 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+from pathlib import Path
 
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
+from user_login import login_user, logout_user
+
+# Check login before showing any content
+if not login_user():
+    st.stop()
+
+
+if st.sidebar.button("Logout"):
+    logout_user()
+    st.rerun()
+
+# Define base directory
+BASE_DIR = Path(__file__).parent.parent
 
 class User:
 
@@ -38,7 +55,8 @@ def main():
     name = st.text_input("Enter your name", placeholder="John Doe")
     st.write("Rate yourself on the following skills:")
 
-    jobs_data = pd.read_csv('D:\\Big-Data-Project\\generated_data\\jobs.csv')
+    # Updated path using pathlib
+    jobs_data = pd.read_csv(BASE_DIR / 'generated_data' / 'jobs.csv')
 
 
     # Skill sliders
