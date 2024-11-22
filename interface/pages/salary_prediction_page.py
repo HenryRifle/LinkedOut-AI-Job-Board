@@ -1,6 +1,7 @@
 import streamlit as st
 import joblib
 from pathlib import Path
+import numpy as np
 
 import sys
 from pathlib import Path
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).parent.parent.parent
 
 @st.cache_resource
 def load_salary_model():
-    return joblib.load(BASE_DIR / 'models' / 'rf_salary_model.pkl')
+    return joblib.load('models\\rf_salary_model.pkl')
 
 rf_model = load_salary_model()
 
