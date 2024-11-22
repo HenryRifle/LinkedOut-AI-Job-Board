@@ -27,7 +27,7 @@ def job_recommendation():
     jobs_data = pd.read_csv("project_data\\generated_data\\jobs.csv")
 
 
-    users_df = pd.read_excel("project_data\\generated_data\\jobs.csv")
+    users_df = pd.read_excel("project_data\\generated_data\\users.xlsx")
 
     user_name = st.session_state.username
     user_data = users_df[users_df['Name'] == user_name]
