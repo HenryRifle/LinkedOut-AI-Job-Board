@@ -62,11 +62,16 @@ melted_df = df.melt(
 )
 melted_df['Year'] = melted_df['Year'].str.extract(r'(\d+)').astype(int)
 
-selected_groups = st.sidebar.multiselect(
+
+st.title("Employment Trends (2019-2029)")
+st.write("Interactive line plot of employment trends for selected occupational groups.")
+
+selected_groups = st.multiselect(
     "Select Occupational Groups",
     options=df['Job Title'].unique(),
     default=df['Job Title'].unique()
 )
+
 
 filtered_data = melted_df[melted_df['Job Title'].isin(selected_groups)]
 
@@ -93,37 +98,4 @@ fig.update_traces(
 )
 
 
-
-
-# plot = hv.Curve(
-#     filtered_data, 
-#     kdims=['Year'], 
-#     vdims=['Employment', 'Job Title']
-# ).groupby('Job Title').overlay()
-
-# hover = HoverTool(
-#     tooltips=[
-#         ("Group", "@{Job Title}"),
-#         ("Year", "@{Year}"),
-#         ("Employment", "@{Employment}")
-#     ]
-# )
-# plot = plot.opts(
-#     opts.Overlay(
-#         show_legend=True, 
-#         legend_position='top_left'
-#     ),
-#     opts.Curve(
-#         tools=[hover], 
-#         line_width=2, 
-#         color=hv.Cycle('Category20'), 
-#         responsive=True, 
-#         height=400, 
-#         width=700
-#     )
-# )
-
-
-st.title("Employment Trends (2019-2029)")
-st.write("Interactive line plot of employment trends for selected occupational groups.")
 st.plotly_chart(fig, use_container_width=True)
