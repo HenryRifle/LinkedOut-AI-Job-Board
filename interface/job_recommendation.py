@@ -24,10 +24,10 @@ def recommend_jobs(user_vector, jobs_data):
 
 def job_recommendation():
 
-    jobs_data = pd.read_csv('D:\\Big-Data-Project\\generated_data\\jobs.csv')
+    jobs_data = pd.read_csv("project_data\\generated_data\\jobs.csv")
 
 
-    users_df = pd.read_excel("D:\\Big-Data-Project\\generated_data\\users.xlsx")
+    users_df = pd.read_excel("project_data\\generated_data\\jobs.csv")
 
     user_name = st.session_state.username
     user_data = users_df[users_df['Name'] == user_name]
