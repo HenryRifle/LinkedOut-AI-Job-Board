@@ -55,7 +55,7 @@ def user_profile():
         "Writing and Reading": writing
     }
 
-    users_df = pd.read_excel("D:\\Big-Data-Project\\generated_data\\users.xlsx")
+    users_df = pd.read_excel("project_data\\generated_data\\users.xlsx")
 
     if st.button("Submit"):
         # new_user_data.update(user_ratings)
@@ -63,7 +63,7 @@ def user_profile():
             users_df.loc[users_df['Name'] == name, key] = value
         # users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=True)
         st.success("Updated your information successfully!")
-        users_df.to_excel('D:\\Big-Data-Project\\generated_data\\users.xlsx', index=False)
+        users_df.to_excel('project_data\\generated_data\\users.xlsx', index=False)
 
 
 
