@@ -19,8 +19,13 @@ if st.sidebar.button("Logout"):
 
 
 #Importing the datasets
-occupations_df = pd.read_excel('project_data\\2023-33\\occupation.xlsx', sheet_name = 2, header = 1)
-occupations_df = occupations_df[occupations_df['Occupation type'] != 'Summary']
+occupations_df_23 = pd.read_excel('project_data\\2023-33\\occupation.xlsx', sheet_name = 2, header = 1)
+occupations_df_19 = pd.read_excel('project_data\\2019-29\\occupation.xlsx', sheet_name=2, header = 1)
+occupations_df_23 = occupations_df_23[occupations_df_23['Occupation type'] != 'Summary']
+occupations_df_19 = occupations_df_19[occupations_df_19['Occupation type'] != 'Summary']
+occupations_df_23 = occupations_df_23.rename(columns={"2023 National Employment Matrix code" : "Occupation"})
+occupations_df_19 = occupations_df_19.rename(columns={"2019 National Employment Matrix code" : "Occupation"})
+occupations_df = pd.merge(occupations_df_23,occupations_df_19, on='Occupation', how='left')
 
 education_df = pd.read_excel('project_data\\2023-33\\education.xlsx', sheet_name = 3, header = 1)
 education_df.rename({'2023 National Employment Matrix title':'Occupation'})
@@ -191,12 +196,18 @@ with base_tabs[1]:
         occupation_data = occupations_df[occupations_df["2023 National Employment Matrix title"] == selected_occupation]
         st.header("Key Metrics")
         col1, col2 = st.columns(2)
+
+        formatted_total_employment = f"{occupation_data['Employment, 2023'].values[0]*1000:,}"
+        formatted_projected_employment = f"{occupation_data['Employment, 2033'].values[0]*1000:,}"
+        formatted_percentage_growth = f"{occupation_data['Employment change, percent, 2023–33'].values[0]}%"
+        formatted_average_salary = f"${occupation_data['Median annual wage, dollars, 2023[1]'].values[0]:,.0f}"
+
         with col1:
-            st.metric("Total Employment (2023)", occupation_data['Employment, 2023'].astype(int)*1000)
-            st.metric("Projected Employment (2033)", occupation_data['Employment, 2033'].astype(int)*1000)
+            st.metric("Total Employment (2023)", formatted_total_employment)
+            st.metric("Projected Employment (2033)", formatted_projected_employment)
         with col2:
-            st.metric("Percentage Growth", f"{occupation_data['Employment change, percent, 2023–33'].values[0]} %")
-            st.metric("Average Salary", f"$ {occupation_data['Median annual wage, dollars, 2023[1]'].values[0]}")
+            st.metric("Percentage Growth", formatted_percentage_growth)
+            st.metric("Average Salary", formatted_average_salary)
 
 
 
@@ -205,7 +216,7 @@ with base_tabs[1]:
         st.header(f"Education Trends for {selected_occupation}")
 
         #Get education data
-        education_data = education_df[education_df['2023 National Employment Matrix code'] == occupation_data['2023 National Employment Matrix code'].astype(str).values[0]]
+        education_data = education_df[education_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
 
         education_levels = education_data.melt(id_vars=['2023 National Employment Matrix title'], value_vars=education_data.columns[1:], 
                                                 var_name='Education Level', value_name='Percentage')
@@ -225,9 +236,11 @@ with base_tabs[1]:
 
         #Create dataframe for employment growth
         employment_data = pd.DataFrame({
-        "Year": ["2023", "2033"],
+        "Year": ["2019", "2023", "2029", "2033"],
         "Employment": [
+            occupation_data["Employment, 2019"].values[0],
             occupation_data["Employment, 2023"].values[0], 
+            occupation_data["Employment, 2029"].values[0],
             occupation_data["Employment, 2033"].values[0]
         ]
     })
@@ -238,7 +251,7 @@ with base_tabs[1]:
             x="Year",
             y="Employment",
             markers=True,
-            title=f"Employment Change for {selected_occupation} (2023-2033)",
+            title=f"Employment Change for {selected_occupation} (2019-2033)",
             labels={"Employment": "Number of Employees", "Year": "Year"}
         )
 
