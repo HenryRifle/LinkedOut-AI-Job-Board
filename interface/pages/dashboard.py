@@ -4,6 +4,10 @@ import plotly.express as px
 from user_login import login_user, logout_user
 import plotly.graph_objects as go
 
+
+st.set_page_config(layout="wide")
+
+
 if not login_user():
     st.stop()
 
@@ -11,6 +15,8 @@ if not login_user():
 if st.sidebar.button("Logout"):
     logout_user()
     st.rerun()
+
+
 
 #Importing the datasets
 occupations_df = pd.read_excel('project_data\\2023-33\\occupation.xlsx', sheet_name = 2, header = 1)

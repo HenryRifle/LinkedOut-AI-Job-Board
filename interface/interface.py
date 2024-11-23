@@ -14,6 +14,9 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from user_login import login_user, logout_user
 
+st.set_page_config(layout="wide")
+
+
 # Check login before showing any content
 if not login_user():
     st.stop()
