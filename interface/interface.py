@@ -54,20 +54,19 @@ def main():
 
     st.title("LinkedOut")
 
-    tab = st.tabs(["Home","Dashboard", "User Profile", "Job Recommendation"])
+    tab = st.tabs(["Home", "My Jobs", "My Profile"])
 
 
     with tab[0]:
         home.home()
-    
+
     with tab[1]:
-        dashboard.dashboard()
+        job_recommendation.job_recommendation()
 
     with tab[2]:
         user_profile.user_profile()
     
-    with tab[3]:
-        job_recommendation.job_recommendation()
+
 
     
 

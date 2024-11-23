@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).parent.parent.parent
 
 # Read the data
 filename = BASE_DIR / 'project_data' / '2023-33' / 'industry.xlsx'
-industry_df = pd.read_excel(filename, sheet_name=11, header=1)
+industry_df = pd.read_excel('project_data\\2023-33\\industry.xlsx', sheet_name=11, header=1)
 
 # Drop unnecessary columns
 industry_df = industry_df.drop(columns=["Industry type", "Output, 2023[1][2]", "Output, 2033[1][2]", "Compound annual rate of change, output, 2023–33"])
