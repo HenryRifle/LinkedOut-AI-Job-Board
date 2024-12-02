@@ -54,12 +54,6 @@ def login_user():
                 password = st.text_input("Password", type="password")
                 submit = st.form_submit_button("Login")
 
-                if submit:
-                    users = load_users()
-                    # Debug information
-                    st.write(f"Debug - Users type: {type(users)}")
-                    if username in users:
-                        st.write(f"Debug - User entry type: {type(users[username])}")
                     
                     # Safer login check
                     if (username in users and 
