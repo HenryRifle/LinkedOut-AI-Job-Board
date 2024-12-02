@@ -1,0 +1,7 @@
+streamlit  
+openpyxl
+pandas
+plotly
+holoviews
+
+

@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).parent.parent.parent
 
 # Read the data
 filename = BASE_DIR / 'project_data' / '2023-33' / 'industry.xlsx'
-industry_df = pd.read_excel('project_data\\2023-33\\industry.xlsx', sheet_name=11, header=1)
+industry_df = pd.read_excel(filename, sheet_name=11, header=1)
 
 # Drop unnecessary columns
 industry_df = industry_df.drop(columns=["Industry type", "Output, 2023[1][2]", "Output, 2033[1][2]", "Compound annual rate of change, output, 2023–33"])
@@ -157,6 +157,53 @@ Interactive chart showing employment changes by industry between 2023 and 2033.
 - Numbers on the right show absolute and percentage changes
 """)
 st.plotly_chart(fig, use_container_width=True)
+
+# After the existing chart and before the "Show detailed data" checkbox
+st.subheader("Top and Bottom Performing Industries")
+
+# Convert the percent change column to numeric
+all_industries_performance = industry_df.copy()
+all_industries_performance['Prediction Percent Change'] = pd.to_numeric(
+    all_industries_performance['Prediction Percent Change'],
+    errors='coerce'
+)
+
+# Get top and bottom 5 performers by percentage change
+top_5 = all_industries_performance.nlargest(5, 'Prediction Percent Change')
+bottom_5 = all_industries_performance.nsmallest(5, 'Prediction Percent Change')
+
+# Create a combined dataframe for visualization
+performance_df = pd.concat([top_5, bottom_5])
+performance_df['Performance'] = ['Top 5' if x in top_5.index else 'Bottom 5' for x in performance_df.index]
+
+# Create bar chart
+fig_performance = px.bar(
+    performance_df,
+    y='Industry',
+    x='Prediction Percent Change',
+    color='Performance',
+    orientation='h',
+    title='Top 5 and Bottom 5 Industries by Projected Growth Rate (2023-2033)',
+    color_discrete_map={'Top 5': '#2ecc71', 'Bottom 5': '#e74c3c'},
+    labels={'Prediction Percent Change': 'Projected Growth Rate (%)', 'Industry': ''}
+)
+
+# Update layout
+fig_performance.update_layout(
+    height=600,
+    showlegend=True,
+    xaxis_title="Percentage Change (%)",
+    yaxis={'categoryorder': 'total ascending'},
+    template="plotly_white"
+)
+
+# Add percentage labels on the bars
+fig_performance.update_traces(
+    texttemplate='%{x:.1f}%',
+    textposition='outside'
+)
+
+st.plotly_chart(fig_performance, use_container_width=True)
 
 # Optionally, add a data table showing the numeric changes
 if st.checkbox("Show detailed data"):
