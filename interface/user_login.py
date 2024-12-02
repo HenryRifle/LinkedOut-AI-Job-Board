@@ -5,7 +5,7 @@ import uuid
 
 def load_users():
     """Load users from JSON file."""
-    users_file = Path(__file__).parent / 'data' / 'users.json'
+    users_file = Path(__file__).parent / 'user_data' / 'users.json'
     users_file.parent.mkdir(exist_ok=True)
     
     default_users = {
@@ -26,12 +26,14 @@ def load_users():
             if not isinstance(users, dict):
                 return default_users
             return users
-    except:
+    except (json.JSONDecodeError, IOError) as e:
+        # Log the error for debugging
+        print(f"Error loading users: {e}")
         return default_users
 
 def save_users(users):
     """Save users to JSON file."""
-    users_file = Path(__file__).parent / 'data' / 'users.json'
+    users_file = Path(__file__).parent / 'user_data' / 'users.json'
     with open(users_file, 'w') as f:
         json.dump(users, f)
 
@@ -54,10 +56,15 @@ def login_user():
                 password = st.text_input("Password", type="password")
                 submit = st.form_submit_button("Login")
 
-                    
+                if submit:
+                    users = load_users()
+                    # Check if users were loaded correctly
+                    if users is None or not isinstance(users, dict):
+                        st.error("Error loading user data.")
+                        return
+
                     # Safer login check
                     if (username in users and 
-                        isinstance(users, dict) and 
                         isinstance(users[username], dict) and 
                         'password' in users[username] and 
                         users[username]['password'] == password):
