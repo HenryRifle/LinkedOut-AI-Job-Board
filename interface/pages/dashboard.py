@@ -5,6 +5,7 @@ from user_login import login_user, logout_user
 import plotly.graph_objects as go
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.preprocessing import MinMaxScaler
 
 
 st.set_page_config(layout="wide")
@@ -310,11 +311,10 @@ with base_tabs[1]:
 
         #Create dataframe for employment growth
         employment_data = pd.DataFrame({
-        "Year": ["2019", "2023", "2029", "2033"],
+        "Year": ["2019", "2023", "2033"],
         "Employment": [
             occupation_data["Employment, 2019"].values[0],
             occupation_data["Employment, 2023"].values[0], 
-            occupation_data["Employment, 2029"].values[0],
             occupation_data["Employment, 2033"].values[0]
         ]
     })
