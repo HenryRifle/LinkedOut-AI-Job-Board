@@ -3,5 +3,5 @@ openpyxl
 pandas
 plotly
 holoviews
-
+scikit-learn
 
