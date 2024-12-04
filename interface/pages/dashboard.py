@@ -268,7 +268,7 @@ with base_tabs[0]:
         )
 
         fig.update_layout(
-            title = "Skill Importance Heatmap by Industry",
+            title = "Skill Importance Heatmap by Major Occupation Groups",
             xaxis = dict(
                 title = "Skills",
                 tickangle = 45,
@@ -298,7 +298,7 @@ with base_tabs[1]:
     selected_occupation = st.selectbox("Select an Occupation:", occupations_df["2023 National Employment Matrix title"].unique().tolist())
 
     # Tabs for Navigation
-    tabs = st.tabs(["Home", "Education Trends", "Employment Projections", "Occupation Insights", "User Recommendations", "Download Data"])
+    tabs = st.tabs(["Home", "Education Trends", "Employment Projections", "Occupation Insights"])
 
     # Home Tab
     with tabs[0]:
@@ -381,3 +381,9 @@ with base_tabs[1]:
             st.warning(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
         else:
             st.success(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+
+        sorted_weights = dict(sorted(weights.items(), key=lambda x:x[1]))
+
+        keys_sorted = list(sorted_weights.keys())
+
+        st.write(f'Skills that are most susceptible to AI are: {keys_sorted[:5]}')
