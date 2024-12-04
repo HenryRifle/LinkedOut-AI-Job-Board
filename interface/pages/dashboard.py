@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.express as px
 from user_login import login_user, logout_user
 import plotly.graph_objects as go
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 st.set_page_config(layout="wide")
@@ -31,6 +33,46 @@ education_df = pd.read_excel('project_data\\2023-33\\education.xlsx', sheet_name
 education_df.rename({'2023 National Employment Matrix title':'Occupation'})
 
 
+skills_df = pd.read_excel('project_data\\2023-33\\skills.xlsx', sheet_name=2, header = 1)
+skills_df = skills_df.drop(columns = ['Employment, 2023','Employment, 2033','Employment change, numeric, 2023–33','Employment change, percent, 2023–33'])
+skills_df = skills_df.rename(columns = {"2023 National Employment Matrix title" : "Occupation","Typical education needed for entry" : "Education","Median annual wage, dollars, 2023[1]" : "Salary"})
+skills_df['Education'] = skills_df['Education'].map({'-' : 0, 'No formal educational credential' : 0,'High school diploma or equivalent' : 1, 'Some college, no degree' : 1, 'Postsecondary nondegree award' : 1,'Associate\'s degree' : 2, 'Bachelor\'s degree' : 3, 'Master\'s degree' : 4, 'Doctoral or professional degree' : 5})
+
+#Weights defining AI susceptibility for each skill
+weights = {
+    "Adaptability": 0.08,
+    "Computers and information technology": 0.09,
+    "Creativity and innovation": 0.09,
+    "Critical and analytical thinking": 0.08,
+    "Customer service": 0.06,
+    "Detail oriented": 0.05,
+    "Fine motor": 0.03,
+    "Interpersonal": 0.08,
+    "Leadership": 0.08,
+    "Mathematics": 0.08,
+    "Mechanical": 0.03,
+    "Physical strength and stamina": 0.02,
+    "Problem solving and decision making": 0.07,
+    "Project management": 0.06,
+    "Science": 0.06,
+    "Speaking and listening": 0.02,
+    "Writing and reading": 0.02,
+}
+
+
+skills_df["AI Susceptibility Score"] = skills_df[list(weights.keys())].mul(weights.values()).sum(axis=1)
+
+def categorize(index):
+    if index >= 3.5:
+        return "Low"
+    elif 3.0 <= index < 3.5:
+        return "Medium"
+    else:
+        return "High"
+
+skills_df["AI Susceptibility"] = skills_df["AI Susceptibility Score"].apply(categorize)
+
+
 industry_df = pd.read_excel('project_data\\2023-33\\industry.xlsx', sheet_name=11, header=1)
 
 # Drop unnecessary columns
@@ -51,9 +93,25 @@ industry_df = industry_df.rename(columns={
 industry_df = industry_df.drop_duplicates(subset='Industry', keep='first')  # gets rid of dups
 industry_df = industry_df.drop(industry_df.tail(5).index)  # drops the footnotes
 
+users_df = pd.read_excel('project_data\\generated_data\\users.xlsx', sheet_name=0)
+
+user = st.session_state.current_user
+user_df = users_df[users_df['Name'] == user]
 
 
 
+# Util Functions
+def get_job_similarity(user_vector, job_vector):
+    uservector = np.array(user_vector)
+
+    similarity = cosine_similarity([uservector],[job_vector])
+
+    return similarity*100
+
+
+
+# Dashboard Starts
+st.title("LinkedOut Dashboard")
 base_tabs = st.tabs(["Industry Insights", "Occupation Insights"])
 
 
@@ -208,6 +266,22 @@ with base_tabs[1]:
         with col2:
             st.metric("Percentage Growth", formatted_percentage_growth)
             st.metric("Average Salary", formatted_average_salary)
+        
+        
+        # st.write(type(emp_code))
+        # st.write(skills_df["2023 National Employment Matrix code"].dtype)
+        
+        # job_data = skills_df[skills_df["2023 National Employment Matrix code"].astype(str) == occupation_data["Occupation"].astype(str)]
+        # st.table(job_data)
+        # job_data.drop(['Salary', 'Occupation'])
+
+        # user_skills = user_df.drop(['Name'])
+        # similarity = get_job_similarity(user_skills, job_data)
+
+        # st.write(similarity)
+
+
+
 
 
 
@@ -260,8 +334,18 @@ with base_tabs[1]:
     # Occupation Insights Tab
     with tabs[3]:
         st.header("Occupation Insights")
-        # Add plots and interactivity here
+        skills_selected_data = skills_df[skills_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
+        st.subheader("AI Susceptibility: " + skills_selected_data["AI Susceptibility"].values[0])
 
+        if skills_selected_data["AI Susceptibility"].values[0] == "High":
+            st.error(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+        elif skills_selected_data["AI Susceptibility"].values[0] == "Medium":
+            st.warning(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+        else:
+            st.success(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+
+        # st.warning("")      
+        
     # User Recommendations Tab
     with tabs[4]:
         st.header("User Recommendations")

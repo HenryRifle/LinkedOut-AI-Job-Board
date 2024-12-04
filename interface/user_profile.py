@@ -10,7 +10,7 @@ class User:
 
 def user_profile():
     # Input fields
-    name = st.session_state.username
+    name = st.session_state.current_user
     
     st.title(f"Rate yourself on the following skills, {name}")
 
