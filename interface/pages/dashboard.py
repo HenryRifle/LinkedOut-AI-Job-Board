@@ -73,17 +73,6 @@ def categorize(index):
 
 skills_df["AI Susceptibility"] = skills_df["AI Susceptibility Score"].apply(categorize)
 
-<<<<<<< HEAD
-=======
-skills_by_major_occupations_df = pd.read_excel('project_data/2023-33/skills.xlsx', sheet_name=1, header = 1)
-
-skills_by_major_occupations_df = skills_by_major_occupations_df.rename(columns = {"2023 National Employment Matrix title" : "Occupation Category"})
-skills_by_major_occupations_df = skills_by_major_occupations_df[skills_by_major_occupations_df["Occupation Category"] != "Total, all occupations"]
-skills_by_major_occupations_df = skills_by_major_occupations_df[~skills_by_major_occupations_df.iloc[:, 0].str.contains("Footnotes|Note|Source", na=False)]
-
-skills_by_major_occupations_df = skills_by_major_occupations_df.reset_index(drop=True)
-
->>>>>>> 7506930a8ec35e62c5a43849ffd937c5ce8d99eb
 industry_df = pd.read_excel('project_data/2023-33/industry.xlsx', sheet_name=11, header=1)
 
 # Drop unnecessary columns
@@ -334,56 +323,3 @@ with base_tabs[1]:
         )
 
         st.plotly_chart(fig)
-
-<<<<<<< HEAD
-=======
-    # Occupation Insights Tab
-    with tabs[3]:
-        st.header("Occupation Insights")
-        skills_selected_data = skills_df[skills_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
-        st.subheader("AI Susceptibility: " + skills_selected_data["AI Susceptibility"].values[0])
-
-        if skills_selected_data["AI Susceptibility"].values[0] == "High":
-            st.error(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
-        elif skills_selected_data["AI Susceptibility"].values[0] == "Medium":
-            st.warning(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
-        else:
-            st.success(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
-
-        st.subheader("Skill Comparison")
-
-        user_skills = user_df.drop(columns=['Name', 'Education', 'Added Skills']).values[0]
-
-        skills_selected_data = skills_selected_data.drop(columns=['Occupation', '2023 National Employment Matrix code', 'Education', 'Salary', 'AI Susceptibility Score', 'AI Susceptibility'])
-        occupation_skills = skills_selected_data[list(weights.keys())].values[0]
-
-        skill_comparison = pd.DataFrame({
-            "Skill": list(weights.keys()),
-            "User Skill Level": user_skills,
-            "Required Skill Level": occupation_skills
-        })
-
-        skill_comparison["Difference"] = skill_comparison["Required Skill Level"] - skill_comparison["User Skill Level"]
-        st.subheader("Skills to Improve", divider='orange')
-        skills_to_improve = skill_comparison[skill_comparison["Difference"] > 0]
-        if not skills_to_improve.empty:
-            st.table(skills_to_improve.assign(hack='').set_index('hack'))
-        else:
-            st.success("You are proficient in all required skills for this occupation!")
-
-        st.subheader("Skills You Are Adequate In", divider='green')
-        adequate_skills = skill_comparison[skill_comparison["Difference"] <= 0]
-        if not adequate_skills.empty:
-            st.table(adequate_skills.assign(hack='').set_index('hack'))
-        else:
-            st.success(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
-
-        # st.warning("")      
-        
-    # User Recommendations Tab
-    with tabs[4]:
-        st.header("User Recommendations")
-        # Add recommendation plots here
-
-        st.write(f'Skills that are most susceptible to AI are: {keys_sorted[:5]}')
->>>>>>> 7506930a8ec35e62c5a43849ffd937c5ce8d99eb
