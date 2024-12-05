@@ -129,7 +129,7 @@ adequate_skills = skill_comparison[skill_comparison["Difference"] <= 0]
 if not adequate_skills.empty:
     st.table(adequate_skills.assign(hack='').set_index('hack'))
 else:
-    st.success(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+    st.success(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
 
 
 
