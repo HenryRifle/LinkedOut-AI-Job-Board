@@ -22,19 +22,19 @@ if st.sidebar.button("Logout"):
 
 
 #Importing the datasets
-occupations_df_23 = pd.read_excel('project_data\\2023-33\\occupation.xlsx', sheet_name = 2, header = 1)
-occupations_df_19 = pd.read_excel('project_data\\2019-29\\occupation.xlsx', sheet_name=2, header = 1)
+occupations_df_23 = pd.read_excel('project_data/2023-33/occupation.xlsx', sheet_name = 2, header = 1)
+occupations_df_19 = pd.read_excel('project_data/2019-29/occupation.xlsx', sheet_name = 2, header = 1)
 occupations_df_23 = occupations_df_23[occupations_df_23['Occupation type'] != 'Summary']
 occupations_df_19 = occupations_df_19[occupations_df_19['Occupation type'] != 'Summary']
 occupations_df_23 = occupations_df_23.rename(columns={"2023 National Employment Matrix code" : "Occupation"})
 occupations_df_19 = occupations_df_19.rename(columns={"2019 National Employment Matrix code" : "Occupation"})
 occupations_df = pd.merge(occupations_df_23,occupations_df_19, on='Occupation', how='left')
 
-education_df = pd.read_excel('project_data\\2023-33\\education.xlsx', sheet_name = 3, header = 1)
+education_df = pd.read_excel('project_data/2023-33/education.xlsx', sheet_name = 3, header = 1)
 education_df.rename({'2023 National Employment Matrix title':'Occupation'})
 
 
-skills_df = pd.read_excel('project_data\\2023-33\\skills.xlsx', sheet_name=2, header = 1)
+skills_df = pd.read_excel('project_data/2023-33/skills.xlsx', sheet_name=2, header = 1)
 skills_df = skills_df.drop(columns = ['Employment, 2023','Employment, 2033','Employment change, numeric, 2023–33','Employment change, percent, 2023–33'])
 skills_df = skills_df.rename(columns = {"2023 National Employment Matrix title" : "Occupation","Typical education needed for entry" : "Education","Median annual wage, dollars, 2023[1]" : "Salary"})
 skills_df['Education'] = skills_df['Education'].map({'-' : 0, 'No formal educational credential' : 0,'High school diploma or equivalent' : 1, 'Some college, no degree' : 1, 'Postsecondary nondegree award' : 1,'Associate\'s degree' : 2, 'Bachelor\'s degree' : 3, 'Master\'s degree' : 4, 'Doctoral or professional degree' : 5})
@@ -81,7 +81,7 @@ skills_by_major_occupations_df = skills_by_major_occupations_df[~skills_by_major
 
 skills_by_major_occupations_df = skills_by_major_occupations_df.reset_index(drop=True)
 
-industry_df = pd.read_excel('project_data\\2023-33\\industry.xlsx', sheet_name=11, header=1)
+industry_df = pd.read_excel('project_data/2023-33/industry.xlsx', sheet_name=11, header=1)
 
 # Drop unnecessary columns
 industry_df = industry_df.drop(columns=["Industry type", "Output, 2023[1][2]", "Output, 2033[1][2]", "Compound annual rate of change, output, 2023–33"])
@@ -101,7 +101,7 @@ industry_df = industry_df.rename(columns={
 industry_df = industry_df.drop_duplicates(subset='Industry', keep='first')  # gets rid of dups
 industry_df = industry_df.drop(industry_df.tail(5).index)  # drops the footnotes
 
-users_df = pd.read_excel('project_data\\generated_data\\users.xlsx', sheet_name=0)
+users_df = pd.read_excel('project_data/generated_data/users.xlsx', sheet_name=0)
 
 user = st.session_state.current_user
 user_df = users_df[users_df['Name'] == user]
@@ -376,14 +376,45 @@ with base_tabs[1]:
         st.subheader("AI Susceptibility: " + skills_selected_data["AI Susceptibility"].values[0])
 
         if skills_selected_data["AI Susceptibility"].values[0] == "High":
-            st.error(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+            st.error(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
         elif skills_selected_data["AI Susceptibility"].values[0] == "Medium":
-            st.warning(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+            st.warning(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
+        else:
+            st.success(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
+
+        st.subheader("Skill Comparison")
+
+        user_skills = user_df.drop(columns=['Name', 'Education', 'Added Skills']).values[0]
+
+        skills_selected_data = skills_selected_data.drop(columns=['Occupation', '2023 National Employment Matrix code', 'Education', 'Salary', 'AI Susceptibility Score', 'AI Susceptibility'])
+        occupation_skills = skills_selected_data[list(weights.keys())].values[0]
+
+        skill_comparison = pd.DataFrame({
+            "Skill": list(weights.keys()),
+            "User Skill Level": user_skills,
+            "Required Skill Level": occupation_skills
+        })
+
+        skill_comparison["Difference"] = skill_comparison["Required Skill Level"] - skill_comparison["User Skill Level"]
+        st.subheader("Skills to Improve", divider='orange')
+        skills_to_improve = skill_comparison[skill_comparison["Difference"] > 0]
+        if not skills_to_improve.empty:
+            st.table(skills_to_improve.assign(hack='').set_index('hack'))
+        else:
+            st.success("You are proficient in all required skills for this occupation!")
+
+        st.subheader("Skills You Are Adequate In", divider='green')
+        adequate_skills = skill_comparison[skill_comparison["Difference"] <= 0]
+        if not adequate_skills.empty:
+            st.table(adequate_skills.assign(hack='').set_index('hack'))
         else:
             st.success(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
 
-        sorted_weights = dict(sorted(weights.items(), key=lambda x:x[1]))
-
-        keys_sorted = list(sorted_weights.keys())
+        # st.warning("")      
+        
+    # User Recommendations Tab
+    with tabs[4]:
+        st.header("User Recommendations")
+        # Add recommendation plots here
 
         st.write(f'Skills that are most susceptible to AI are: {keys_sorted[:5]}')
