@@ -73,7 +73,7 @@ def categorize(index):
 
 skills_df["AI Susceptibility"] = skills_df["AI Susceptibility Score"].apply(categorize)
 
-skills_by_major_occupations_df = pd.read_excel('project_data\\2023-33\\skills.xlsx', sheet_name=1, header = 1)
+skills_by_major_occupations_df = pd.read_excel('project_data/2023-33/skills.xlsx', sheet_name=1, header = 1)
 
 skills_by_major_occupations_df = skills_by_major_occupations_df.rename(columns = {"2023 National Employment Matrix title" : "Occupation Category"})
 skills_by_major_occupations_df = skills_by_major_occupations_df[skills_by_major_occupations_df["Occupation Category"] != "Total, all occupations"]
@@ -408,7 +408,7 @@ with base_tabs[1]:
         if not adequate_skills.empty:
             st.table(adequate_skills.assign(hack='').set_index('hack'))
         else:
-            st.success(f"According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.")
+            st.success(f'According to our formula, this occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
 
         # st.warning("")      
         
