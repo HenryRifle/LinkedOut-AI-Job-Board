@@ -120,7 +120,7 @@ base_tabs = st.tabs(["Industry Insights", "Occupation Insights"])
 with base_tabs[0]:
     st.title("Industry Insights (2023-33)")
 
-    tabs = st.tabs(["Employment Trends"])
+    tabs = st.tabs(["Employment Trends", "Top & Bottom Performing Occupations"])
 
 
     with tabs[0]:
@@ -231,7 +231,7 @@ with base_tabs[0]:
         st.plotly_chart(fig, use_container_width=True)
 
         # Optionally, add a data table showing the numeric changes
-        if st.checkbox("Show detailed data"):
+        if st.checkbox("Show detailed data", key="industry_detailed_data"):
             change_data = filtered_df[[
                 'Industry', 
                 '2023 Employment', 
@@ -240,6 +240,61 @@ with base_tabs[0]:
                 'Prediction Percent Change'
             ]]
             st.dataframe(change_data)
+
+    # Top & Bottom Performing Occupations Tab
+    with tabs[1]:
+        st.header("Top 10 Best and Worst Performing Occupations (2023-2033)")
+
+        # Convert the percent change column to numeric
+        occupations_df['Employment change, percent, 2023–33'] = pd.to_numeric(
+            occupations_df['Employment change, percent, 2023–33'],
+            errors='coerce'
+        )
+
+        # Get top and bottom 10 performers by percentage change
+        top_10_occupations = occupations_df.nlargest(10, 'Employment change, percent, 2023–33')
+        bottom_10_occupations = occupations_df.nsmallest(10, 'Employment change, percent, 2023–33')
+
+        # Create a combined dataframe for visualization
+        performance_occupations_df = pd.concat([top_10_occupations, bottom_10_occupations])
+        performance_occupations_df['Performance'] = ['Top 10' if x in top_10_occupations.index else 'Bottom 10' for x in performance_occupations_df.index]
+
+        # Create bar chart
+        fig_performance_occupations = px.bar(
+            performance_occupations_df,
+            y='2023 National Employment Matrix title',
+            x='Employment change, percent, 2023–33',
+            color='Performance',
+            orientation='h',
+            title='Top 10 and Bottom 10 Occupations by Projected Growth Rate (2023-2033)',
+            color_discrete_map={'Top 10': '#2ecc71', 'Bottom 10': '#e74c3c'},
+            labels={'Employment change, percent, 2023–33': 'Projected Growth Rate (%)', '2023 National Employment Matrix title': ''}
+        )
+
+        # Update layout
+        fig_performance_occupations.update_layout(
+            height=600,
+            showlegend=True,
+            xaxis_title="Percentage Change (%)",
+            yaxis={'categoryorder': 'total ascending'},
+            template="plotly_white"
+        )
+
+        # Add percentage labels on the bars
+        fig_performance_occupations.update_traces(
+            texttemplate='%{x:.1f}%',
+            textposition='outside'
+        )
+
+        st.plotly_chart(fig_performance_occupations, use_container_width=True)
+
+        # Optionally, add a data table showing the numeric changes
+        if st.checkbox("Show detailed data", key="occupation_detailed_data"):
+            change_data_occupations = performance_occupations_df[[
+                '2023 National Employment Matrix title', 
+                'Employment change, percent, 2023–33'
+            ]]
+            st.dataframe(change_data_occupations)
 
 
 
@@ -272,18 +327,12 @@ with base_tabs[1]:
         with col2:
             st.metric("Percentage Growth", formatted_percentage_growth)
             st.metric("Average Salary", formatted_average_salary)
-        
-
-
-
-
-
 
     # Education Trends Tab
     with tabs[1]:
         st.header(f"Education Trends for {selected_occupation}")
 
-        #Get education data
+        # Get education data
         education_data = education_df[education_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
 
         education_levels = education_data.melt(id_vars=['2023 National Employment Matrix title'], value_vars=education_data.columns[1:], 
@@ -302,17 +351,17 @@ with base_tabs[1]:
 
         st.metric("Percentage Growth 2023-33", f"{occupation_data['Employment change, percent, 2023–33'].values[0]} %")
 
-        #Create dataframe for employment growth
+        # Create dataframe for employment growth
         employment_data = pd.DataFrame({
-        "Year": ["2019", "2023", "2033"],
-        "Employment": [
-            occupation_data["Employment, 2019"].values[0],
-            occupation_data["Employment, 2023"].values[0], 
-            occupation_data["Employment, 2033"].values[0]
-        ]
-    })
+            "Year": ["2019", "2023", "2033"],
+            "Employment": [
+                occupation_data["Employment, 2019"].values[0],
+                occupation_data["Employment, 2023"].values[0], 
+                occupation_data["Employment, 2033"].values[0]
+            ]
+        })
 
-        #Line chart
+        # Line chart
         fig = px.line(
             employment_data,
             x="Year",
