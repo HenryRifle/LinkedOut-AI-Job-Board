@@ -6,7 +6,7 @@ import plotly.express as px
 
 @st.cache_resource
 def load_salary_model():
-    return joblib.load('models\\rf_salary_model.pkl')
+    return joblib.load('models/rf_salary_model.pkl')
 
 
 rf_model = load_salary_model()
@@ -18,7 +18,8 @@ def predict_salary(skills):
     return predicted_salary
 
 
-user_df = pd.read_excel('project_data\\generated_data\\users.xlsx')
+
+user_df = pd.read_excel('project_data/generated_data/users.xlsx')
 occupations_df_23 = pd.read_excel('project_data/2023-33/occupation.xlsx', sheet_name = 2, header = 1)
 occupations_df_19 = pd.read_excel('project_data/2019-29/occupation.xlsx', sheet_name = 2, header = 1)
 occupations_df_23 = occupations_df_23[occupations_df_23['Occupation type'] != 'Summary']
