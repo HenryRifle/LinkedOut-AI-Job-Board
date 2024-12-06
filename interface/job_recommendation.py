@@ -30,7 +30,6 @@ def job_recommendation():
     users_df = pd.read_excel("project_data/generated_data/users.xlsx")
 
     user_name = st.session_state.current_user
-    user_data = users_df[users_df['Name'] == user_name]
 
     skill_columns = ['Education','Adaptability','Computers and information technology','Creativity','Critical and Analytical Thinking','Customer Service','Detail Oriented','Fine Motor Skills','Interpersonal Relations','Leadership','Mathematics','Mechanical','Physical Strength and Stamina','Problem Solving and Decision Making','Project Management','Scientific Skills','Speaking and Listening','Writing and Reading']
     user_skills = users_df.loc[users_df['Name'] == user_name, skill_columns]
@@ -38,8 +37,8 @@ def job_recommendation():
     null_skills = user_skills.isna().any()
 
 
-    if null_skills.any():
-        st.warning("Please go to user profile and update skills first!")
+    if null_skills.any(): 
+        st.warning("Please go to user profile and update all the skills first.")
     else:
         recommendations = recommend_jobs(user_skills_vector, jobs_data)
 

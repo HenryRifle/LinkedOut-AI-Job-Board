@@ -2,6 +2,9 @@ import streamlit as st
 import json
 from pathlib import Path
 import uuid
+import pandas as pd
+
+
 
 def load_users():
     """Load users from JSON file."""
@@ -36,6 +39,7 @@ def save_users(users):
     users_file = Path(__file__).parent / 'user_data' / 'users.json'
     with open(users_file, 'w') as f:
         json.dump(users, f)
+    
 
 def login_user():
     """Handle the login process and signup."""
@@ -103,6 +107,10 @@ def login_user():
                             "password": new_password,
                             "userID": str(uuid.uuid4())
                         }
+                        new_user_data = {"Name": new_username}
+                        users_df = pd.read_excel('project_data/generated_data/users.xlsx')
+                        users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=True)
+                        users_df.to_excel('project_data/generated_data/users.xlsx')
                         save_users(users)
                         st.success("Account created successfully! Please go to the Login tab to sign in.")
 
