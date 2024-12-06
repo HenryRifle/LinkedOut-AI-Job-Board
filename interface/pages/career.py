@@ -3,6 +3,21 @@ import pandas as pd
 import joblib
 import numpy as np
 import plotly.express as px
+from user_login import login_user, logout_user
+
+
+st.set_page_config(layout="wide")
+
+
+if not login_user():
+    st.stop()
+
+
+if st.sidebar.button("Logout"):
+    logout_user()
+    st.rerun()
+
+
 
 @st.cache_resource
 def load_salary_model():
