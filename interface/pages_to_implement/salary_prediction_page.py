@@ -75,22 +75,12 @@ def user_profile():
        
         # Slider
         selected_option = st.select_slider(
-        label=skill,
+        label='',
         options=list(slider_options.keys()),
         key=f"slider_{skill}"  # Unique key using skill name
         )
          # Slider widget
 
-        # Labels below the slider using HTML
-        st.markdown(
-            """
-            <div style="display: flex; justify-content: space-between;">
-                <span>Beginner</span>
-                <span>Advanced</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
         # Converting the option to its mapped numerical value so we can store them in the excel
         user_ratings[skill] = slider_options[selected_option]
         
