@@ -18,8 +18,6 @@ if st.sidebar.button("Logout"):
     logout_user()
     st.rerun()
 
-
-
 # Define base directory
 BASE_DIR = Path(__file__).parent.parent.parent
 
@@ -44,9 +42,6 @@ class User:
         self.skills_vector = skills_vector
 
 
-
-
-
 def user_profile():
     # Input fields
     name = st.session_state.username
@@ -62,14 +57,29 @@ def user_profile():
         "Writing and Reading"
     ]
 
+    slider_options = {
+        "No Experience": 0,
+        "Basic Awareness": 1,
+        "Foundational Knowledge": 2,
+        "Intermediate Proficiency": 3,
+        "Advanced Proficiency": 4,
+        "Expert": 5
+    }
+
     user_ratings = {}
 
     # Create sliders with Beginner and Advanced labels below
     for skill in skills:
         st.write(f"### {skill}")
         
+       
         # Slider
-        user_ratings[skill] = st.slider("", 0.0, 5.0, 2.5, 0.5, key=skill)  # Slider widget
+        selected_option = st.select_slider(
+        label=skill,
+        options=list(slider_options.keys()),
+        key=f"slider_{skill}"  # Unique key using skill name
+        )
+         # Slider widget
 
         # Labels below the slider using HTML
         st.markdown(
@@ -81,6 +91,9 @@ def user_profile():
             """,
             unsafe_allow_html=True,
         )
+        # Converting the option to its mapped numerical value so we can store them in the excel
+        user_ratings[skill] = slider_options[selected_option]
+        
 
 
 
