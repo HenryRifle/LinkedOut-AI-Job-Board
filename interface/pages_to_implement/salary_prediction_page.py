@@ -58,12 +58,12 @@ def user_profile():
     ]
 
     slider_options = {
-        "No Experience": 0,
-        "Basic Awareness": 1,
-        "Foundational Knowledge": 2,
-        "Intermediate Proficiency": 3,
-        "Advanced Proficiency": 4,
-        "Expert": 5
+        "0 - No Experience": 0,
+        "1 -Basic Awareness": 1,
+        "2 - Foundational Knowledge": 2,
+        "3 - Intermediate Proficiency": 3,
+        "4 - Advanced Proficiency": 4,
+        "5 - Expert": 5
     }
 
     user_ratings = {}
