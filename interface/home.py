@@ -17,8 +17,8 @@ skill_columns = artificial_users_df.drop(columns=['Name', 'Unnamed: 0', 'Current
 
 user_similarities = cosine_similarity(skill_columns)
 
-artificial_users_df['Similarity'] = user_similarities[0]
-recommended_users = artificial_users_df[['Name','Current Occupation','Similarity']].sort_values(by='Similarity', ascending=False)
+artificial_users_df['Match (%)'] = user_similarities[0]*100
+recommended_users = artificial_users_df[['Name','Current Occupation','Match (%)']].sort_values(by='Match (%)', ascending=False)
 
 recommended_users = recommended_users[recommended_users['Name'] != st.session_state.current_user]
 
@@ -28,4 +28,4 @@ def home():
 
     st.subheader("Recommended for you : ")
 
-    st.table(recommended_users[:5])
+    st.table(recommended_users[:5].assign(hack='').set_index('hack'))

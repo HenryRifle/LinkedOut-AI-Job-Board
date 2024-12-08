@@ -16,8 +16,8 @@ def recommend_jobs(user_vector, jobs_data):
 
     similarities = cosine_similarity([uservector],jobs_skills)
 
-    jobs_data['Match'] = similarities[0]*100
-    recommended_occupations = jobs_data[['Job Title','Company Name','Match']].sort_values(by='Match', ascending=False)
+    jobs_data['Match (%)'] = similarities[0]*100
+    recommended_occupations = jobs_data[['Job Title','Company Name','Match (%)']].sort_values(by='Match (%)', ascending=False)
 
     return recommended_occupations[:10]
 
@@ -44,6 +44,6 @@ def job_recommendation():
 
         st.title(f"Here are your recommended jobs, {user_name}.")
 
-        st.table(recommendations)
+        st.table(recommendations.assign(hack='').set_index('hack'))
 
 
