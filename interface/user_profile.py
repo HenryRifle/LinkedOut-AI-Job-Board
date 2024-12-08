@@ -62,8 +62,6 @@ def user_profile():
         for key, value in user_ratings.items():
             users_df.loc[users_df['Name'] == name, key] = value
         # users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=True)
-        st.write(user_ratings)
-        st.table(users_df[users_df['Name'] == name])
         st.success("Updated your information successfully!")
         users_df.to_excel('project_data/generated_data/users.xlsx', index=False)
 

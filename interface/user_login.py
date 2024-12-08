@@ -119,7 +119,7 @@ def login_user():
                             "userID": str(uuid.uuid4()),
                             "occupation": selected_occupation.strip()
                         }
-                        new_user_data = {"Name": new_username}
+                        new_user_data = {"Name": new_username, "Current Occupation": selected_occupation}
                         users_df = pd.read_excel('project_data/generated_data/users.xlsx')
                         users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=True)
                         users_df.to_excel('project_data/generated_data/users.xlsx')
