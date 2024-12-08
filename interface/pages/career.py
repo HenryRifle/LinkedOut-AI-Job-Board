@@ -136,7 +136,7 @@ def show_career_page():
     st.header("Occupation Insights")
     st.subheader(f"Hello, {st.session_state.current_user}.")
     selected_occupation = st.selectbox("Select an Occupation:", occupations_df["2023 National Employment Matrix title"].unique().tolist(), index = occupations_df["2023 National Employment Matrix title"].unique().tolist().index(user_current_occupation))
-
+    
     st.subheader(f"Based on your skills, your predicted salary is: ${predicted_salary:,.0f}")
 
     st.subheader(f'For your occupation, the average annual salary is ${national_useroccupation_df['A_MEDIAN'].values[0]:,.0f}')

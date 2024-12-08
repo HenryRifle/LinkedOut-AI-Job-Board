@@ -1,0 +1,36 @@
+Unnamed: 0,Name,Education,Adaptability,Computers and information technology,Creativity,Critical and Analytical Thinking,Customer Service,Detail Oriented,Fine Motor Skills,Interpersonal Relations,Leadership,Mathematics,Mechanical,Physical Strength and Stamina,Problem Solving and Decision Making,Project Management,Scientific Skills,Speaking and Listening,Writing and Reading,Current Occupation
+0,Atharv,4.5,4.5,5,4,4,2.5,3,2.5,3.5,3.5,4.5,2.5,2.5,4.5,3.5,4,4,4,Data scientists
+1,Riya,4,4.5,4.5,4,4,4,3.5,3,4.5,4,4,3,2.5,4,3.5,3.5,4,4,Software developers
+2,Aarav,3.5,4,3.5,4.5,3.5,4.5,4,3.5,3.5,4.5,3.5,3,2,3.5,3,3,3.5,3.5,General and operations managers
+3,Sneha,4.5,4.5,3.5,3,4.5,5,4,3.5,4.5,5,4.5,2.5,2.5,4.5,4,3.5,4,4,Financial managers
+4,Ishaan,5,5,4,4.5,4.5,4.5,4,4,4.5,4.5,3.5,3.5,3,4.5,3.5,4,3.5,3.5,Marketing managers
+5,Kavya,4,3.5,3.5,4,3,4,4.5,3,4.5,4,3.5,2,2.5,3.5,3.5,4,3.5,3.5,Chief executives
+6,Arjun,4.5,4,4.5,4,4.5,3.5,4,3,4.5,3.5,4,3,2.5,3.5,4,3.5,4,4.5,"Architects,  except landscape and naval"
+7,Meera,3.5,4.5,3,3.5,3.5,5,3.5,3.5,4,3.5,2.5,2,2.5,4,3.5,3.5,4,3.5,Human resources managers
+8,Lucas,4,4,4.5,4.5,4.5,3.5,4,3,4.5,4,3,2.5,2.5,3.5,3,3.5,4,3,Legal secretaries and administrative assistants
+9,Emma,4.5,3.5,3.5,4,3.5,4.5,4,3.5,4,4,3.5,3,3,3.5,3.5,3.5,4,3.5,"Secretaries and administrative assistants,  except legal,  medical and executive"
+10,Noah,3.5,4,3,4.5,4,4,4.5,4,3.5,3.5,4,3.5,2.5,3,3.5,4,4,3.5,Medical secretaries and administrative assistants
+11,Lily,4.5,4,4,3.5,3.5,4,3,4,4,4,3.5,3,2,3,3.5,3.5,4,4,Receptionists and information clerks
+12,Oliver,3.5,4.5,4,4.5,3.5,4,4,3,4,3.5,4,3.5,2.5,3,4,3.5,3.5,4,Desktop publishers
+13,Sophia,4,4.5,4,4.5,4,3,3.5,4,4,4,3.5,3,2,3,3.5,3.5,4,4,Order clerks
+14,Ethan,3.5,4,3.5,4,3.5,4.5,4,3.5,4,3.5,4,3.5,2,3.5,3,3.5,3.5,3.5,Public safety telecommunicators
+15,Isabella,4.5,4.5,4,4.5,4,4,4,4,4.5,4,4,3.5,3.5,3.5,4,4.5,4,4,Postal service clerks
+16,Mason,3.5,4,3.5,4.5,4,3.5,4,3,4.5,4,3,3,3,3.5,3.5,4,4,3.5,"Plumbers,  pipefitters and steamfitters"
+17,Chloe,4,4,4,4.5,4,4,4,3.5,4,3.5,3,3,3.5,3.5,4,4,3.5,4,"Truck drivers, heavy and tractor-trailer"
+18,Mia,4.5,4,4.5,4,4.5,3.5,4,3.5,4.5,4,4,3,3,4,4,4.5,3.5,4,Cabinetmakers and bench carpenters
+19,Liam,3.5,4,3,4.5,4,3.5,4,3.5,4,4.5,4,3,3,4,3.5,3.5,3.5,4,Medical appliance technicians
+20,Charlotte,4,4,3.5,4,4,4.5,3,4,4.5,4,4.5,3.5,2.5,4,4.5,3.5,4,4,Print binding and finishing workers
+21,James,4.5,3.5,3.5,4,3.5,4.5,4,4,3.5,4.5,4,3.5,3.5,3,4,3.5,4,3.5,Machine feeders and offbearers
+22,Megan,4,4.5,4.5,4,3.5,2.5,3,2.5,3.5,3.5,4.5,2,2.5,4.5,4,3.5,3.5,4,Data scientists
+23,David,3.5,4,4.5,4,4,2.5,3,3,3,3,4,3,2.5,4.5,3,3.5,3.5,4,Software developers
+24,Eleanor,4.5,3.5,3.5,4,3.5,4.5,3.5,4,4,4,4.5,3.5,3,3,4,3.5,4,3.6,General and operations managers
+25,John,3.5,4.5,4,4.5,3.5,4,4,3,4,3.5,4,3.5,2.5,3,4,3.5,3.5,4,Financial managers
+26,Maria,4,4,4,4.5,4,4,4,3.5,4,4,4.5,4,4,3,3.5,3.5,4,4.5,Chief executives
+27,Lucas,3.5,4,3,4.5,4,3.5,4,3.5,4,4,4,3.5,2.5,3,4,3.5,4,3.5,Receptionists and information clerks
+28,Isabella,4.5,4.5,4,4.5,4,4,4,4,4.5,4,4,3.5,3.5,3.5,4,4.5,3,3,Postal service clerks
+29,James,3.5,4,4,4,3.5,4.5,3.5,4,4,4,4.5,3.5,3,3,4,3.5,4,4,Legal secretaries and administrative assistants
+30,Sophia,4,4.5,4,4.5,4,3,3.5,4,4,4,3.5,3,2,3,2,3,3,3,Order clerks
+31,Ethan,3.5,4,3.5,4,3.5,4.5,4,3.5,4,3.5,4,3.5,2,3.5,3,3,3,3,Public safety telecommunicators
+32,Liam,4.5,4,4.5,4,4.5,3.5,4,3.5,4.5,4,4,3,3,4,3,3,4,4,Receptionists and information clerks
+33,Owen,3.5,4.5,4,4.5,3.5,4,4,3,4,3.5,4,3.5,2.5,3,3,3.5,3,3.5,Desktop publishers
+34,Sophia,4,4.5,4,4.5,4,3,3.5,4,4,4,3.5,3,2,3,2,3,2,3,Order clerks
