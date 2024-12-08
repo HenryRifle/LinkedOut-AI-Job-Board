@@ -1,6 +1,15 @@
 import streamlit as st
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+from user_login import login_user, logout_user
+
+# Check login before showing any content
+if not login_user():
+    st.stop()
+
+if st.sidebar.button("Logout"):
+    logout_user()
+    st.rerun()
 
 artificial_users_df = pd.read_csv('project_data/generated_data/users_artificial.csv')
 
