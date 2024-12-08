@@ -260,17 +260,35 @@ with base_tabs[0]:
 # OCCUPATION DASHBOARD
 with base_tabs[1]:
     # Header
-    st.title("Occupation Insights (2023–2033)")
-    st.subheader("Interactive Dashboard for Exploring Workforce Trends and Future Projections")
-    selected_occupation = st.selectbox("Select an Occupation:", occupations_df["2023 National Employment Matrix title"].unique().tolist())
+    st.title("💼 Occupation Insights (2023–2033)")
+    st.subheader("📊 Interactive Dashboard for Exploring Workforce Trends and Future Projections")
+    st.divider()  # Add a horizontal divider for better structure
 
-    # Tabs for Navigation
-    tabs = st.tabs(["Home", "Education Trends", "Employment Projections", "Skill Insights", "Top 10 Best and Worst Performing Occupations (2023-2033)"])
+    # Dropdown for selecting occupation
+    selected_occupation = st.selectbox(
+        "🔍 Select an Occupation:",
+        occupations_df["2023 National Employment Matrix title"].unique().tolist(),
+    )
+
+    # Tabs for navigation
+    tabs = st.tabs([
+        "🏠 Home",
+        "🎓 Education Trends",
+        "📈 Employment Projections",
+        "🛠️ Skill Insights",
+        "🏆 Top and Bottom Performers (2023–2033)",
+    ])
 
     # Home Tab
     with tabs[0]:
+        # Filter data for the selected occupation
         occupation_data = occupations_df[occupations_df["2023 National Employment Matrix title"] == selected_occupation]
-        st.header("Key Metrics")
+
+        st.header("📌 Key Metrics")
+        st.write("Explore essential insights about the selected occupation below:")
+        st.divider()
+
+        # Split metrics into columns
         col1, col2 = st.columns(2)
 
         formatted_total_employment = f"{occupation_data['Employment, 2023'].values[0]*1000:,}"
@@ -279,11 +297,16 @@ with base_tabs[1]:
         formatted_average_salary = f"${occupation_data['Median annual wage, dollars, 2023[1]'].values[0]:,.0f}"
 
         with col1:
-            st.metric("Total Employment (2023)", formatted_total_employment)
-            st.metric("Projected Employment (2033)", formatted_projected_employment)
+            st.metric("👷 Total Employment (2023)", formatted_total_employment)
+            st.metric("📊 Projected Employment (2033)", formatted_projected_employment)
         with col2:
-            st.metric("Percentage Growth", formatted_percentage_growth)
-            st.metric("Average Salary", formatted_average_salary)
+            st.metric("📈 Percentage Growth", formatted_percentage_growth)
+            st.metric("💰 Average Salary", formatted_average_salary)
+
+        # Add spacing for better layout
+        st.divider()
+        st.write("Use the tabs above to explore additional trends and data insights.")
+
 
     # Education Trends Tab
     with tabs[1]:
