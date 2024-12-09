@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
+from pathlib import Path
 
 
 st.set_page_config(layout="wide")
@@ -251,6 +252,66 @@ with base_tabs[0]:
                 'Prediction Percent Change'
             ]]
             st.dataframe(change_data)
+
+    with tabs[1]:
+        st.subheader("Top and Bottom Performing Industries")
+
+        # Convert 'Prediction Percent Change' to numeric
+        industry_df['Prediction Percent Change'] = pd.to_numeric(industry_df['Prediction Percent Change'], errors='coerce')
+
+        # Drop rows with NaN values in 'Prediction Percent Change'
+        industry_df = industry_df.dropna(subset=['Prediction Percent Change'])
+
+        # Get top and bottom 10 performers by percentage change
+        top_10 = industry_df.nlargest(10, 'Prediction Percent Change')
+        bottom_10 = industry_df.nsmallest(10, 'Prediction Percent Change')
+
+        # Debugging: Check if top_10 and bottom_10 are empty
+        if top_10.empty and bottom_10.empty:
+            st.write("No data available for top and bottom performing industries.")
+        else:
+            # Create a combined dataframe for visualization
+            performance_df = pd.concat([top_10, bottom_10])
+            performance_df['Performance'] = ['Top 10' if x in top_10.index else 'Bottom 10' for x in performance_df.index]
+
+            # Sort the DataFrame to have top performing industries first
+            performance_df = performance_df.sort_values(by='Prediction Percent Change', ascending=False)
+
+            # Melt the DataFrame for plotting
+            melted_performance_df = performance_df.melt(id_vars=['Industry', 'Performance'], 
+                                                          value_vars=['Prediction Percent Change'],
+                                                          var_name='Metric', 
+                                                          value_name='Value')
+
+            # Create horizontal bar chart for top and bottom performing industries
+            fig_performance = px.bar(
+                melted_performance_df,
+                y='Industry',  # Change x to y for horizontal bars
+                x='Value',     # Change y to x for horizontal bars
+                color='Performance',
+                title='Top 10 and Bottom 10 Industries by Projected Growth Rate (2023-2033)',
+                color_discrete_map={'Top 10': '#2ecc71', 'Bottom 10': '#e74c3c'},
+                labels={'Value': 'Projected Growth Rate (%)', 'Industry': ''}
+            )
+
+            # Update layout
+            fig_performance.update_layout(
+                barmode='group',
+                yaxis_title="Industry",  # Update y-axis title
+                xaxis_title="Projected Growth Rate (%)",  # Update x-axis title
+                legend_title="Performance",
+                height=600,
+                template="plotly_white"
+            )
+
+            # Add percentage labels on the bars
+            fig_performance.update_traces(
+                texttemplate='%{x:.1f}%',  # Update to x for horizontal bars
+                textposition='outside'
+            )
+
+            st.plotly_chart(fig_performance, use_container_width=True)
+
 
 
   # moved top and bottom performing occupations to the occupation dashboard 
