@@ -112,6 +112,91 @@ skills_by_major_occupations_df = skills_by_major_occupations_df[~skills_by_major
 skills_by_major_occupations_df = skills_by_major_occupations_df.reset_index(drop=True)
 
 
+
+labor_force_df = pd.read_excel('project_data/2019-29/labor-force.xlsx', sheet_name=None)
+labor_force_trends_df = labor_force_df["Table 3.1"]
+
+custom_headers = [
+    'group','1999', '2009', '2019', '2029', 
+    'change_1999_09', 'change_2009_19', 'change_2019_29',
+    'percent_change_1999_09', 'percent_change_2009_19', 'percent_change_2019_29',
+    'percent_distribution_1999', 'percent_distribution_2009', 'percent_distribution_2019', 'percent_distribution_2029',
+    'annual_growth_rate_1999_09', 'annual_growth_rate_2009_19', 'annual_growth_rate_2019_29'
+]
+
+
+# Drop the first two rows
+labor_force_trends_df = labor_force_trends_df[2:]
+
+# Assign custom headers to the DataFrame
+labor_force_trends_df.columns = custom_headers
+
+# Reset the index for cleaner handling
+labor_force_trends_df = labor_force_trends_df.reset_index(drop=True)
+labor_force_trends_df = labor_force_trends_df[labor_force_trends_df['group'].notna()]  # Remove rows with NaN in 'group'
+labor_force_trends_df = labor_force_trends_df[~labor_force_trends_df['group'].str.startswith('Footnotes', na=False)]
+labor_force_trends_df = labor_force_trends_df[~labor_force_trends_df['group'].str.contains('Note|Source', na=False)]
+labor_force_trends_df = labor_force_trends_df[~labor_force_trends_df['group'].str.contains('Age of baby-boomers| The "all other groups"', na=False)]
+
+numeric_columns = [
+    '1999', '2009', '2019', '2029', 'change_1999_09', 
+    'change_2009_19', 'change_2019_29', 'percent_change_1999_09', 
+    'percent_change_2009_19', 'percent_change_2019_29',
+    'percent_distribution_1999', 'percent_distribution_2009', 
+    'percent_distribution_2019', 'percent_distribution_2029',
+    'annual_growth_rate_1999_09', 'annual_growth_rate_2009_19', 
+    'annual_growth_rate_2019_29'
+]
+labor_force_trends_df[numeric_columns] = labor_force_trends_df[numeric_columns].apply(pd.to_numeric, errors='coerce')
+
+
+prefixes = {
+    'Total, 16 years and older':'Total',
+    'Men, 16 years and older': 'Men',
+    'Women, 16 years and older': 'Women'
+}
+
+# Create a list of age groups to modify
+age_groups = [
+    '16 to 24', '16 to 19', '20 to 24', 
+    '25 to 54', '25 to 34', '35 to 44', 
+    '45 to 54', '55 and older', 
+    '55 to 64', '65 to 74', '75 and older'
+]
+
+sex_group = ['Men', 'Women']
+
+# Add the prefixes based on their respective sections
+current_prefix = None
+for index, row in labor_force_trends_df.iterrows():
+    group_value = row['group']
+    if group_value in prefixes:  # If the row contains a prefix (e.g., "Men, 16 years and older")
+        current_prefix = prefixes[group_value]
+    elif group_value in age_groups and current_prefix:  # If the row contains an age group
+        labor_force_trends_df.at[index, 'group'] = f"{current_prefix} {group_value}"
+
+demographic_groups = {
+    'White': 'White',
+    'Black': 'Black',
+    'All other groups':'All other groups',
+    'Hispanic origin':'Hispanic',
+    'Other than Hispanic origin': 'Non-Hispanic'
+}
+
+# Iterate through the DataFrame and update 'Men' and 'Women' rows
+current_demo = None  # To track the current demographic group
+for index, row in labor_force_trends_df.iterrows():
+    group_value = row['group']
+    
+    # Check if the row matches or contains a demographic group
+    matched_demo = next((prefix for key, prefix in demographic_groups.items() if key in group_value), None)
+    if matched_demo:
+        current_demo = matched_demo  # Update the current demographic group
+    elif group_value.strip() in ['Men', 'Women'] and current_demo:  # If row is "Men" or "Women" under a demographic group
+        labor_force_trends_df.at[index, 'group'] = f"{current_demo} {group_value.strip()}"  # Append demographic group to "Men" or "Women"
+
+
+
 # Util Functions
 def get_job_similarity(user_vector, job_vector):
     uservector = np.array(user_vector)
@@ -132,7 +217,7 @@ base_tabs = st.tabs(["Industry Insights", "Occupation Insights"])
 with base_tabs[0]:
     st.title("Industry Insights (2023-33)")
 
-    tabs = st.tabs(["Employment Trends", "Top & Bottom Performing Industries"])
+    tabs = st.tabs(["Employment Trends", "Top & Bottom Performing Industries", "Labor Force Trends"])
 
 
     with tabs[0]:
@@ -311,6 +396,126 @@ with base_tabs[0]:
             )
 
             st.plotly_chart(fig_performance, use_container_width=True)
+
+    with tabs[2]:
+
+        age_groups = [
+        'Total 16 to 24', 'Total 16 to 19', 'Total 20 to 24', 
+        'Total 25 to 54', 'Total 25 to 34', 'Total 35 to 44', 
+        'Total 45 to 54', 'Total 55 and older', 
+        'Total 55 to 64', 'Total 65 to 74', 'Total 75 and older'
+        ]
+
+        df_total = labor_force_trends_df[labor_force_trends_df['group'].isin(age_groups)]
+
+        # Reshape the data for visualization
+        df_total_melted = df_total.melt(
+            id_vars='group', 
+            value_vars=['1999', '2009', '2019', '2029'], 
+            var_name='Year', 
+            value_name='Labor Force'
+        )
+
+        # Plot the trends for "Total" groups
+        fig = px.line(
+            df_total_melted, 
+            x='Year', 
+            y='Labor Force', 
+            color='group', 
+            title='Labor Force Trends by Age Group Over Time (Total Population)',
+            labels={'Labor Force': 'Labor Force (in thousands)', 'Year': 'Year', 'group': 'Age Group'},
+            color_discrete_sequence=px.colors.qualitative.Bold  
+
+        )
+
+        # st.plotly_chart(fig)
+
+
+
+        age_groups = [
+        '16 to 24', '16 to 19', '20 to 24', 
+        '25 to 54', '25 to 34', '35 to 44', 
+        '45 to 54', '55 and older', 
+        '55 to 64', '65 to 74', '75 and older'
+        ]
+
+        st.subheader('How the labor force is distributed across different age groups.')
+
+        selected_age_group = st.selectbox(
+        "Select an Age Group:",
+        age_groups,
+        )
+
+        # Loop through each age group and create a plot comparing men and women
+        men_group = f"Men {selected_age_group}"
+        women_group = f"Women {selected_age_group}"
+        df_age = labor_force_trends_df[labor_force_trends_df['group'].isin([men_group, women_group])]
+
+        # Reshape the data for visualization
+        df_age_melted = df_age.melt(
+            id_vars='group', 
+            value_vars=['1999', '2009', '2019', '2029'], 
+            var_name='Year', 
+            value_name='Labor Force'
+        )
+
+        # Plot the trends for the current age group
+        fig1 = px.line(
+            df_age_melted, 
+            x='Year', 
+            y='Labor Force', 
+            color='group', 
+            title=f'Labor Force Trends for {selected_age_group} (Men vs Women)',
+            labels={'Labor Force': 'Labor Force (in thousands)', 'Year': 'Year', 'group': 'Gender'},
+            color_discrete_sequence=px.colors.qualitative.Bold  
+        )
+
+        st.plotly_chart(fig1) 
+        st.plotly_chart(fig) #Just to reorder interactive plot and plot of total population we are plotting the first fig here.
+
+
+        demographics = [
+            {'group1': 'White Men', 'group2': 'Black Men', 'title': 'Labor Force Trends: White Men vs Black Men'},
+            {'group1': 'White Women', 'group2': 'Black Women', 'title': 'Labor Force Trends: White Women vs Black Women'}
+        ]
+
+        st.subheader("Labor Force Trends by Race and Gender")
+
+        # User selects two demographics to compare
+        all_demographics = ['White', 'White Men', 'White Women','Black', 'Black Men', 'Black Women', 'Hispanic origin', 'Hispanic Men', 'Hispanic Women', 'Other than Hispanic origin', 'All other groups Men', 'All other groups Women']
+        group1 = st.selectbox("Select the first demographic:", all_demographics, index=0)
+        group2 = st.selectbox("Select the second demographic:", all_demographics, index=3)
+
+        if group1 != group2:
+            # Filter data for the selected groups
+            df_filtered = labor_force_trends_df[labor_force_trends_df['group'].isin([group1, group2])]
+
+            # Reshape the data for visualization
+            df_melted = df_filtered.melt(
+                id_vars='group', 
+                value_vars=['1999', '2009', '2019', '2029'], 
+                var_name='Year', 
+                value_name='Labor Force'
+            )
+
+            # Plot the trends for the selected groups
+            fig2 = px.line(
+                df_melted, 
+                x='Year', 
+                y='Labor Force', 
+                color='group', 
+                title=f"Labor Force Trends: {group1} vs {group2}",
+                labels={'Labor Force': 'Labor Force (in thousands)', 'Year': 'Year', 'group': 'Demographic'},
+                color_discrete_sequence=px.colors.qualitative.Bold  
+            )
+
+            st.plotly_chart(fig2)
+        else:
+            st.warning("Please select two different demographics to compare.")
+
+
+
+
 
 
 
