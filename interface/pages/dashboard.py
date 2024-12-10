@@ -620,8 +620,6 @@ with base_tabs[1]:
         st.plotly_chart(fig)
     
     with tabs[3]:
-        st.subheader("Skill Comparison")
-        st.write('You can compare what skills you are good at vs what you can improve on to be proficient in the selected profession.')
         user_skills = current_user.drop(columns=['Name', 'Education', 'Added Skills', 'Unnamed: 0', 'Current Occupation']).values[0]
         skills_selected_data = skills_df[skills_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
         skills_selected_data = skills_selected_data.drop(columns=['Occupation', '2023 National Employment Matrix code', 'Education', 'Salary', 'AI Susceptibility Score', 'AI Susceptibility'])
@@ -632,6 +630,17 @@ with base_tabs[1]:
         "Your Skill Level": user_skills,
         "Required Skill Level": occupation_skills
         })
+
+        sorted_skills = skill_comparison.sort_values(by='Required Skill Level', ascending=False)
+        
+        top_skills = sorted_skills.head(4)
+
+        st.subheader('Most Required Skills for this Occupation:')
+        for i in top_skills['Skill']:
+            st.write('• '+i)
+
+        st.subheader("Skill Comparison")
+        st.write('You can compare what skills you are good at vs what you can improve on to be proficient in the selected profession.')
 
         skill_comparison["Difference"] = skill_comparison["Required Skill Level"] - skill_comparison["Your Skill Level"]
         st.subheader("Skills to Improve", divider='orange')

@@ -130,13 +130,13 @@ def compute_wage_percentile(wage):
 
 def show_career_page():
 
-    st.title("My Career")
+    st.title("💼 My Career")
 
     
-    st.header("Occupation Insights")
-    st.subheader(f"Hello, {st.session_state.current_user}.")
+    st.header(f"Hello, {st.session_state.current_user}.")
+    st.header("📊 Here are your Career Insights")
 
-    st.subheader(f"Based on your skills, your predicted salary is: ${predicted_salary:,.0f}")
+    st.subheader(f"💰 Based on your skills, your predicted salary is: ${predicted_salary:,.0f}")
 
     st.subheader(f'For your occupation, the average annual salary is ${national_useroccupation_df['A_MEDIAN'].values[0]:,.0f}')
     user_wage_percentile = compute_wage_percentile(predicted_salary)
@@ -176,18 +176,34 @@ def show_career_page():
     occupation_data = occupations_df[occupations_df["2023 National Employment Matrix title"] == user_current_occupation]
 
     skills_selected_data = skills_df[skills_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
-    st.subheader("AI Susceptibility: " + skills_selected_data["AI Susceptibility"].values[0])
+    st.subheader("🤖 AI Susceptibility: " + skills_selected_data["AI Susceptibility"].values[0])
 
     if skills_selected_data["AI Susceptibility"].values[0] == "High":
-        st.write(f'This occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
+        st.write(f'#### This occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
     elif skills_selected_data["AI Susceptibility"].values[0] == "Medium":
-        st.write(f'This occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
+        st.write(f'#### This occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
     else:
-        st.write(f'This occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
+        st.write(f'#### This occupation has a {skills_selected_data["AI Susceptibility"].values[0].lower()} susceptibility to Artificial Intelligence. Usually, occupations which use skills that can be easily replicated by AI are more susceptible to be automated.')
 
-    st.subheader("Skill Comparison")
-    st.write('Here is a comparison of your skills vs the average skill level required for this profession.')
-    st.write('You can see what you are good at, and which areas you can improve on right here.')
+    df1 = pd.DataFrame(list(weights.items()), columns=["Skill", "Susceptibility"])
+
+    # Sort by susceptibility (low to high)
+    df_sorted = df1.sort_values(by="Susceptibility", ascending=True)
+
+    most_prone = df_sorted.head(3)
+    most_resistant = df_sorted.tail(3)
+
+    st.write("### Most AI-Prone Skills:")
+    for i in most_prone['Skill']:
+        st.write(i)
+
+    st.write("### Most AI-Resistant Skills:")
+    for i in most_resistant['Skill']:
+        st.write(i)
+
+
+
+
 
     
 
@@ -203,6 +219,20 @@ def show_career_page():
         "Your Skill Level": user_skills,
         "Required Skill Level": occupation_skills
     })
+
+    sorted_skills = skill_comparison.sort_values(by='Required Skill Level', ascending=False)
+    
+    top_skills = sorted_skills.head(4)
+
+    st.subheader('💡Most Required Skills for this Occupation:')
+    for i in top_skills['Skill']:
+        st.write('• '+i)
+
+    
+    st.header("🛠️ Skill Comparison")
+    st.write('Here is a comparison of your skills vs the average skill level required for this profession.')
+    st.write('You can see what you are good at, and which areas you can improve on right here.')
+
 
     skill_comparison["Difference"] = skill_comparison["Required Skill Level"] - skill_comparison["Your Skill Level"]
     st.subheader("Skills to Improve", divider='orange')
