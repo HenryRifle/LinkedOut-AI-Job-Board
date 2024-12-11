@@ -336,7 +336,7 @@ with base_tabs[0]:
                 'Prediction Numeric Change', 
                 'Prediction Percent Change'
             ]]
-            st.dataframe(change_data)
+            st.dataframe(change_data, hide_index=True)
 
     with tabs[1]:
         st.subheader("Top and Bottom Performing Industries")
@@ -578,18 +578,25 @@ with base_tabs[1]:
     with tabs[1]:
         st.header(f"Education Trends for {selected_occupation}")
 
+        education_data_training = pd.read_excel('project_data/2023-33/education.xlsx', sheet_name=4, header = 1)
+
         # Get education data
         education_data = education_df[education_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
 
         education_levels = education_data.melt(id_vars=['2023 National Employment Matrix title'], value_vars=education_data.columns[1:], 
                                                 var_name='Education Level', value_name='Percentage')
+        education_level_1 = education_data_training[education_data_training['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
 
-        fig = px.pie(education_levels, 
+        fig = px.pie(education_levels,
                     names='Education Level', 
                     values='Percentage', 
                     title=f'Education Level Distribution')
 
         st.plotly_chart(fig)
+
+        st.subheader('Average Work Experience Level: ' + education_level_1['Work experience in a related occupation'].values[0])
+
+
 
     # Employment Projections Tab
     with tabs[2]:
@@ -740,7 +747,7 @@ with base_tabs[1]:
                 '2023 National Employment Matrix title', 
                 'Employment change, percent, 2023–33'
             ]]
-            st.dataframe(change_data_occupations)
+            st.dataframe(change_data_occupations, hide_index=True)
 
 
 
