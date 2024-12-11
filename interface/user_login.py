@@ -132,11 +132,11 @@ def logout_user():
     """Log out the user."""
     st.session_state.logged_in = False
 
-# Add this to the main section of your Streamlit pages
+
 if __name__ == "__main__":
     if login_user():
         if st.sidebar.button("Logout", key="main_logout_button"):
             logout_user()
             st.rerun()
-        # Your main app content goes here
+        
         st.write("Main app content")
