@@ -371,8 +371,8 @@ with base_tabs[0]:
             # Create horizontal bar chart for top and bottom performing industries
             fig_performance = px.bar(
                 melted_performance_df,
-                y='Industry',  # Change x to y for horizontal bars
-                x='Value',     # Change y to x for horizontal bars
+                y='Industry',  
+                x='Value',     
                 color='Performance',
                 title='Top 10 and Bottom 10 Industries by Projected Growth Rate (2023-2033)',
                 color_discrete_map={'Top 10': '#2ecc71', 'Bottom 10': '#e74c3c'},
@@ -382,8 +382,8 @@ with base_tabs[0]:
             # Update layout
             fig_performance.update_layout(
                 barmode='group',
-                yaxis_title="Industry",  # Update y-axis title
-                xaxis_title="Projected Growth Rate (%)",  # Update x-axis title
+                yaxis_title="Industry",  
+                xaxis_title="Projected Growth Rate (%)",  
                 legend_title="Performance",
                 height=600,
                 template="plotly_white"
@@ -391,7 +391,7 @@ with base_tabs[0]:
 
             # Add percentage labels on the bars
             fig_performance.update_traces(
-                texttemplate='%{x:.1f}%',  # Update to x for horizontal bars
+                texttemplate='%{x:.1f}%',  
                 textposition='outside'
             )
 
