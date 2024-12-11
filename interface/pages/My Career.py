@@ -63,7 +63,7 @@ skills_by_major_occupations_df = skills_by_major_occupations_df.reset_index(drop
 #Weights defining AI susceptibility for each skill
 weights = {
     "Adaptability": 0.08,
-    "Computers and information technology": 0.09,
+    "Computers and information technology": 0.06,
     "Creativity and innovation": 0.09,
     "Critical and analytical thinking": 0.08,
     "Customer service": 0.06,
@@ -73,7 +73,7 @@ weights = {
     "Leadership": 0.08,
     "Mathematics": 0.08,
     "Mechanical": 0.03,
-    "Physical strength and stamina": 0.02,
+    "Physical strength and stamina": 0.05,
     "Problem solving and decision making": 0.07,
     "Project management": 0.06,
     "Science": 0.06,
@@ -97,7 +97,7 @@ skills_df["AI Susceptibility"] = skills_df["AI Susceptibility Score"].apply(cate
 current_user = user_df[user_df['Name'] == st.session_state.current_user]
 
 
-current_user_skills = current_user.drop(['Name', 'Added Skills', 'Unnamed: 0', 'Current Occupation'], axis = 1)
+current_user_skills = current_user.drop(['Name', 'Added Skills', 'Current Occupation'], axis = 1)
 
 # This is a weird way to filter out the occupation from skills dataset but just comparing the current occupation string to the Occupation column in skills_df is not working for some reason!
 user_current_occupation = current_user['Current Occupation'].values[0]
@@ -116,7 +116,6 @@ national_df_23 = pd.read_excel('project_data/oesm23nat/national_M2023_dl.xlsx')
 
 national_useroccupation_df = national_df_23[national_df_23['OCC_CODE'] == user_occupation_skills['2023 National Employment Matrix code'].values[0]]
 
-
 def compute_wage_percentile(wage):
     if wage >= national_useroccupation_df['A_PCT90'].values[0]:
         return '90th Percentile'
@@ -126,6 +125,8 @@ def compute_wage_percentile(wage):
         return '50th Percentile'
     elif wage >= national_useroccupation_df['A_PCT25'].values[0]:
         return '25th Percentile'
+    else:
+        return '10th Percentile'
 
 
 def show_career_page():
@@ -207,7 +208,7 @@ def show_career_page():
 
     
 
-    user_skills = current_user.drop(columns=['Name', 'Education', 'Added Skills', 'Unnamed: 0', 'Current Occupation']).values[0]
+    user_skills = current_user.drop(columns=['Name', 'Education', 'Added Skills','Current Occupation']).values[0]
 
     skills_selected_data = skills_selected_data.drop(columns=['Occupation', '2023 National Employment Matrix code', 'Education', 'Salary', 'AI Susceptibility Score', 'AI Susceptibility'])
     occupation_skills = skills_selected_data[list(weights.keys())].values[0]
@@ -268,7 +269,7 @@ def show_career_page():
     )
 
     fig.update_layout(
-        title = "Skill Importance Heatmap for" + user_current_occupation + ".",
+        title = "Skill Importance Heatmap for " + user_current_occupation.strip() + ".",
         xaxis = dict(
             title = "Skills",
             tickangle = 45,

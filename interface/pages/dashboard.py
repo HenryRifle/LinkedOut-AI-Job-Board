@@ -620,7 +620,7 @@ with base_tabs[1]:
         st.plotly_chart(fig)
     
     with tabs[3]:
-        user_skills = current_user.drop(columns=['Name', 'Education', 'Added Skills', 'Unnamed: 0', 'Current Occupation']).values[0]
+        user_skills = current_user.drop(columns=['Name', 'Education', 'Added Skills', 'Current Occupation']).values[0]
         skills_selected_data = skills_df[skills_df['2023 National Employment Matrix code'] == occupation_data['Occupation'].astype(str).values[0]]
         skills_selected_data = skills_selected_data.drop(columns=['Occupation', '2023 National Employment Matrix code', 'Education', 'Salary', 'AI Susceptibility Score', 'AI Susceptibility'])
         occupation_skills = skills_selected_data[list(weights.keys())].values[0]

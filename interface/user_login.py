@@ -120,9 +120,9 @@ def login_user():
                             "occupation": selected_occupation.strip()
                         }
                         new_user_data = {"Name": new_username, "Current Occupation": selected_occupation}
-                        users_df = pd.read_excel('project_data/generated_data/users.xlsx')
-                        users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=False)
-                        users_df.to_excel('project_data/generated_data/users.xlsx')
+                        users_df = pd.read_excel('project_data/generated_data/users.xlsx', index_col=0)
+                        users_df = pd.concat([users_df, pd.DataFrame([new_user_data])], ignore_index=True)
+                        users_df.to_excel('project_data/generated_data/users.xlsx', index=False)
                         save_users(users)
                         st.success("Account created successfully! Please go to the Login tab to sign in.")
 

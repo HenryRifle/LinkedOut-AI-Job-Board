@@ -76,4 +76,9 @@ def main():
 
 # Run the app
 if __name__ == "__main__":
-    main()
+    if login_user():
+        if st.sidebar.button("Logout", key="main_logout_button"):
+            logout_user()
+            st.rerun()
+        else:
+            main()
