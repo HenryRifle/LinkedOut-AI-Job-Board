@@ -54,3 +54,7 @@ The project utilized multiple datasets from the US Labor Statistics website, inc
 - **Krishnasai Narayan**
 - **Henry Kern**
 - **Gaurangi Garg**
+
+## Documentation
+The project documentation can be found at https://atharvpatwardhan.github.io/LinkedOut-AI-Job-Board
+
