@@ -12,9 +12,3 @@ Welcome to LinkedOut's Documentation
    codebase
    results_and_findings
    future_scope
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
