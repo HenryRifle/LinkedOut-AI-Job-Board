@@ -8,9 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
 from pathlib import Path
 
-
 st.set_page_config(layout="wide")
-
 
 if not login_user():
     st.stop()
@@ -20,9 +18,7 @@ if st.sidebar.button("Logout"):
     logout_user()
     st.rerun()
 
-
-
-#Importing the datasets
+#Importing the given datasets and merging the two different projection years
 occupations_df_23 = pd.read_excel('project_data/2023-33/occupation.xlsx', sheet_name = 2, header = 1)
 occupations_df_19 = pd.read_excel('project_data/2019-29/occupation.xlsx', sheet_name = 2, header = 1)
 occupations_df_23 = occupations_df_23[occupations_df_23['Occupation type'] != 'Summary']
@@ -61,7 +57,6 @@ weights = {
     "Writing and reading": 0.02,
 }
 
-
 skills_df["AI Susceptibility Score"] = skills_df[list(weights.keys())].mul(weights.values()).sum(axis=1)
 
 def categorize(index):
@@ -94,7 +89,7 @@ industry_df = industry_df.rename(columns={
     "Compound annual rate of change, employment, 2023–33": "Prediction Annual Rate of Change"
 })
 
-# Clean up data
+# Cleaning up the dataset
 industry_df = industry_df.drop_duplicates(subset='Industry', keep='first')  # gets rid of dups
 industry_df = industry_df.drop(industry_df.tail(5).index)  # drops the footnotes
 
@@ -111,8 +106,6 @@ skills_by_major_occupations_df = skills_by_major_occupations_df[~skills_by_major
 
 skills_by_major_occupations_df = skills_by_major_occupations_df.reset_index(drop=True)
 
-
-
 labor_force_df = pd.read_excel('project_data/2019-29/labor-force.xlsx', sheet_name=None)
 labor_force_trends_df = labor_force_df["Table 3.1"]
 
@@ -124,8 +117,6 @@ custom_headers = [
     'annual_growth_rate_1999_09', 'annual_growth_rate_2009_19', 'annual_growth_rate_2019_29'
 ]
 
-
-# Drop the first two rows
 labor_force_trends_df = labor_force_trends_df[2:]
 
 # Assign custom headers to the DataFrame
@@ -148,7 +139,6 @@ numeric_columns = [
     'annual_growth_rate_2019_29'
 ]
 labor_force_trends_df[numeric_columns] = labor_force_trends_df[numeric_columns].apply(pd.to_numeric, errors='coerce')
-
 
 prefixes = {
     'Total, 16 years and older':'Total',
@@ -195,8 +185,6 @@ for index, row in labor_force_trends_df.iterrows():
     elif group_value.strip() in ['Men', 'Women'] and current_demo:  # If row is "Men" or "Women" under a demographic group
         labor_force_trends_df.at[index, 'group'] = f"{current_demo} {group_value.strip()}"  # Append demographic group to "Men" or "Women"
 
-
-
 # Util Functions
 def get_job_similarity(user_vector, job_vector):
     uservector = np.array(user_vector)
@@ -206,11 +194,9 @@ def get_job_similarity(user_vector, job_vector):
     return similarity*100
 
 
-
 # Dashboard Starts
 st.title("LinkedOut Dashboard")
 base_tabs = st.tabs(["Industry Insights", "Occupation Insights"])
-
 
 
 # INDUSTRY DASHBOARD
@@ -513,15 +499,7 @@ with base_tabs[0]:
         else:
             st.warning("Please select two different demographics to compare.")
 
-
-
-
-
-
-
   # moved top and bottom performing occupations to the occupation dashboard 
-
-
 
 # OCCUPATION DASHBOARD
 with base_tabs[1]:
@@ -595,7 +573,6 @@ with base_tabs[1]:
         st.plotly_chart(fig)
 
         st.subheader('Average Work Experience Level: ' + education_level_1['Work experience in a related occupation'].values[0])
-
 
 
     # Employment Projections Tab
@@ -748,7 +725,3 @@ with base_tabs[1]:
                 'Employment change, percent, 2023–33'
             ]]
             st.dataframe(change_data_occupations, hide_index=True)
-
-
-
-

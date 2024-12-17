@@ -139,7 +139,7 @@ def show_career_page():
 
     st.subheader(f"💰 Based on your skills, your predicted salary is: ${predicted_salary:,.0f}")
 
-    st.subheader(f'For your occupation, the average annual salary is ${national_useroccupation_df['A_MEDIAN'].values[0]:,.0f}')
+    st.subheader(f'For your occupation, the average annual salary is ${national_useroccupation_df["A_MEDIAN"].values[0]:,.0f}')
     user_wage_percentile = compute_wage_percentile(predicted_salary)
 
     st.subheader('Your predicted salary falls in the ' + user_wage_percentile + ' of all '+ user_current_occupation + '.')

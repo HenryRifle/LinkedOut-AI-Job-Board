@@ -16,7 +16,7 @@ def home():
     name = st.session_state.current_user
     artificial_users_df = pd.read_csv('project_data/generated_data/users_artificial.csv')
 
-    skill_columns = artificial_users_df.drop(columns=['Name', 'Current Occupation'], errors='ignore')
+    skill_columns = artificial_users_df.drop(columns=['Name', 'Current Occupation', 'Unnamed: 0'], errors='ignore')
     users_df = pd.read_excel("project_data/generated_data/users.xlsx")
 
     current_user = st.session_state.current_user
